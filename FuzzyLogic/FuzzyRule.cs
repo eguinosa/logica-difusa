@@ -49,6 +49,26 @@ namespace FuzzyLogic
             return minAlpha;
         }
 
+        public decimal Alpha((bool hasValue, decimal value, FuzzySet set)[] vs)
+        {
+            if (vs.Length != premises.Length) throw new Exception("The values must be equal to the amount of Fuzzy Sets of the Premises");
+
+            decimal minAlpha;
+            if (vs[0].hasValue) minAlpha = premises[0].F(vs[0].value);
+            else minAlpha = FuzzySet.Intersection(premises[0], vs[0].set).MaxValueY;
+
+            for (int i = 1; i < premises.Length; i++)
+            {
+                decimal newAlpha;
+                if (vs[i].hasValue) newAlpha = premises[i].F(vs[i].value);
+                else newAlpha = FuzzySet.Intersection(premises[i], vs[i].set).MaxValueY;
+
+                if (newAlpha < minAlpha) minAlpha = newAlpha;
+            }
+
+            return minAlpha;
+        }
+
         public FuzzySet Mamdani(decimal[] vs)
         {
             var alpha = Alpha(vs);
@@ -63,6 +83,13 @@ namespace FuzzyLogic
             return result;
         }
 
+        public FuzzySet Mamdani((bool hasValue, decimal value, FuzzySet set)[] vs)
+        {
+            var alpha = Alpha(vs);
+            var result = conclusion.Limit(alpha);
+            return result;
+        }
+
         public FuzzySet Larsen(decimal[] vs)
         {
             var alpha = Alpha(vs);
@@ -71,6 +98,13 @@ namespace FuzzyLogic
         }
 
         public FuzzySet Larsen(FuzzySet[] vs)
+        {
+            var alpha = Alpha(vs);
+            var result = conclusion.Multiply(alpha);
+            return result;
+        }
+
+        public FuzzySet Larsen((bool hasValue, decimal value, FuzzySet set)[] vs)
         {
             var alpha = Alpha(vs);
             var result = conclusion.Multiply(alpha);

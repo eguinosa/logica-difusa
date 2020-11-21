@@ -28,7 +28,15 @@ namespace FuzzyLogic
             var result = mamdani.Aggregate((a, b) => FuzzySet.Union(a, b));
             return result;
         }
+
         public FuzzySet Mamdani(FuzzySet[] vs)
+        {
+            var mamdani = rules.Select(rule => rule.Mamdani(vs));
+            var result = mamdani.Aggregate((a, b) => FuzzySet.Union(a, b));
+            return result;
+        }
+
+        public FuzzySet Mamdani((bool hasValue, decimal value, FuzzySet set)[] vs)
         {
             var mamdani = rules.Select(rule => rule.Mamdani(vs));
             var result = mamdani.Aggregate((a, b) => FuzzySet.Union(a, b));
@@ -43,6 +51,13 @@ namespace FuzzyLogic
         }
 
         public FuzzySet Larsen(FuzzySet[] vs)
+        {
+            var larsen = rules.Select(rule => rule.Larsen(vs));
+            var result = larsen.Aggregate((a, b) => FuzzySet.Union(a, b));
+            return result;
+        }
+        
+        public FuzzySet Larsen((bool hasValue, decimal value, FuzzySet set)[] vs)
         {
             var larsen = rules.Select(rule => rule.Larsen(vs));
             var result = larsen.Aggregate((a, b) => FuzzySet.Union(a, b));
@@ -93,6 +108,49 @@ namespace FuzzyLogic
         }
 
         public decimal Resolve(Aggregation agg, Defuzzification def, params FuzzySet[] vs)
+        {
+            FuzzySet set;
+            decimal result;
+
+            switch (agg)
+            {
+                case Aggregation.Mamdani:
+                    set = Mamdani(vs);
+                    break;
+                case Aggregation.Larsen:
+                    set = Larsen(vs);
+                    break;
+                default:
+                    set = Mamdani(vs);
+                    break;
+            }
+
+            switch (def)
+            {
+                case Defuzzification.Centroid:
+                    result = set.Centroid();
+                    break;
+                case Defuzzification.Bisector:
+                    result = set.Bisector();
+                    break;
+                case Defuzzification.FOM:
+                    result = set.FirstOfMaximum();
+                    break;
+                case Defuzzification.LOM:
+                    result = set.LastOfMaximum();
+                    break;
+                case Defuzzification.MOM:
+                    result = set.MeanOfMaxDiscrete();
+                    break;
+                default:
+                    result = set.Centroid();
+                    break;
+            }
+
+            return result;
+        }
+    
+        public decimal Resolve(Aggregation agg, Defuzzification def, params (bool hasValue, decimal value, FuzzySet set)[] vs)
         {
             FuzzySet set;
             decimal result;

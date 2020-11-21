@@ -346,7 +346,10 @@ namespace FuzzyLogic
                         if (lastB && !lastA)
                         {
                             var p = a.functions[i - 1].Intersection(b.functions[j - 1]);
-                            newPoints.Add(p);
+                            if (p != b.points[j - 1] && p != a.points[i])
+                            {
+                                newPoints.Add(p);
+                            }
                         }
                         newPoints.Add(a.points[i]);
                         lastA = true;
@@ -359,7 +362,10 @@ namespace FuzzyLogic
                         if (lastA && !lastB)
                         {
                             var p = b.functions[j - 1].Intersection(a.functions[i - 1]);
-                            newPoints.Add(p);
+                            if (p != a.points[i - 1] && p != b.points[j])
+                            {
+                                newPoints.Add(p);
+                            }
                         }
                         newPoints.Add(b.points[j]);
                         lastA = false;
@@ -414,7 +420,10 @@ namespace FuzzyLogic
                         else
                         {
                             var p = a.functions[i - 1].Intersection(b.functions[j - 1]);
-                            newPoints.Add(p);
+                            if (p != b.points[j - 1] && p != a.points[i])
+                            {
+                                newPoints.Add(p);
+                            }
                             newPoints.Add(a.points[i]);
                             lastA = true;
                             lastB = false;
@@ -447,7 +456,7 @@ namespace FuzzyLogic
                             lastB = false;
                             j++;
                         }
-                        if (b.points[j].y >= a.functions[i - 1].F(b.points[j].x))
+                        else if (b.points[j].y >= a.functions[i - 1].F(b.points[j].x))
                         {
                             newPoints.Add(b.points[j]);
                             lastA = false;
@@ -476,7 +485,10 @@ namespace FuzzyLogic
                         else
                         {
                             var p = b.functions[j - 1].Intersection(a.functions[i - 1]);
-                            newPoints.Add(p);
+                            if (p != a.points[i - 1] && p != b.points[j])
+                            {
+                                newPoints.Add(p);
+                            }
                             newPoints.Add(b.points[j]);
                             lastA = false;
                             lastB = true;
@@ -718,6 +730,24 @@ namespace FuzzyLogic
 
             var result = new FuzzySet(a.SetLimitX, newPoints.ToArray());
             return result;
+        }
+
+        protected static void DelRedundance(ref List<(decimal x, decimal y)> points)
+        {
+            int i = 1;
+            while(i < points.Count)
+            {
+                if (points[i - 1] == points[i]) points.RemoveAt(i);
+                else i++;
+            }
+
+            i = 2;
+            while (i < points.Count)
+            {
+                var f = new Function(points[i - 2], points[i]);
+                if (points[i - 1].y == f.F(points[i - 1].x)) points.RemoveAt(i - 1);
+                else i++;
+            }
         }
 
     }

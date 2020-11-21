@@ -38,5 +38,11 @@ namespace FuzzyLogic
             var results = inference.Select(control => control.Resolve(agg, def, vs));
             return results.ToArray();
         }
+    
+        public decimal[] Resolve(Aggregation agg, Defuzzification def, params (bool hasValue, decimal value, FuzzySet set)[] vs)
+        {
+            var results = inference.Select(control => control.Resolve(agg, def, vs));
+            return results.ToArray();
+        }
     }
 }
