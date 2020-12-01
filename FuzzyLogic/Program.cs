@@ -10,39 +10,6 @@ namespace FuzzyLogic
     {
         static void Main(string[] args)
         {
-            #region Testing Things
-            //var cero = new FuzzySet(2, (0, 0), (1, 0));
-            //var all = new FuzzySet(2, (0, 0), (0, 2), (2, 2), (2, 0));
-
-            //var a = new FuzzySet(4, (0, 0), (1, 2), (2, 3), (4,0));
-            //var b = new FuzzySet(4, (0, 0), (1, 2), (2, 1), (3, 1), (3, 0));
-
-            //var c = new FuzzySet(9, (0, 0), (0, 4), (1, 4), (3, 1), (5, 2), (7, 2), (9, 0));
-            //var d = new FuzzySet(9, (2, 0), (3, 3), (5, 3), (6, 1), (9, 1), (9, 0));
-
-            //var inter = FuzzySet.Intersection(c, d);
-            //var union = FuzzySet.Union(a, b);
-
-
-            //Console.WriteLine("Fuzzy Set:");
-            //foreach (var item in union.SetPoints)
-            //{
-            //    Console.WriteLine(item);
-            //}
-
-            ////var centroid = inter.Centroid();
-            ////var bisector = inter.Bisector();
-
-            //var firstMax = union.FirstOfMaximum();
-            //var lastMax = union.LastOfMaximum();
-            //var meanMax = union.MeanOfMaxDiscrete();
-
-            //Console.WriteLine("The First Max: {0}", firstMax);
-            //Console.WriteLine("The Last Max: {0}", lastMax);
-            //Console.WriteLine("The Mean of Max: {0}", meanMax);
-            //Console.WriteLine(decimal.Round(meanMax));
-            #endregion
-
             //Amount of Clothes
             var amountSmall = new FuzzySet(100, (0, 0), (0, 1), (20, 1), (35, 0));
             var amountMedium = new FuzzySet(100, (15, 0), (35, 1), (55, 1), (75, 0));
